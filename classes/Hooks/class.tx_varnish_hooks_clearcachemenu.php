@@ -22,6 +22,9 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+if (version_compare(TYPO3_version, '6.1', '<=')) {
+	require_once(PATH_typo3 . 'interfaces/interface.backend_cacheActionsHook.php');
+}
 
 /**
  * This class contains required hooks which are called by TYPO3
@@ -30,8 +33,6 @@
  * @package	TYPO3
  * @subpackage	tx_varnish
  */
-
-
 class tx_varnish_hooks_clearcachemenu implements backend_cacheActionsHook {
 
 
