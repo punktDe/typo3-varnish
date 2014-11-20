@@ -44,14 +44,16 @@ class tx_varnish_hooks_clearcachemenu implements backend_cacheActionsHook {
 	 */
 	public function manipulateCacheActions(&$cacheActions, &$optionValues) {
 		/** @var $LANG language */
-		global $LANG;
-		$title = $LANG->sL('LLL:EXT:varnish/locallang.xml:be_clear_cache_menu');
-		$cacheActions[] = array(
-			'id'    => 'varnish',
-			'title' => $title,
-			'href'  => 'ajax.php?ajaxID=tx_varnish::banAll',
-			'icon'  => '<img src="/'.$GLOBALS['TYPO3_LOADED_EXT']['varnish']['siteRelPath'].'ext_icon.gif" title="'.$title.'" alt="'.$title.'" />',
-		);
+		if($GLOBALS['BE_USER']->isAdmin() || $GLOBALS['BE_USER']->getTSConfigVal('options.clearCache.varnish')) {
+			global $LANG;
+			$title = $LANG->sL('LLL:EXT:varnish/locallang.xml:be_clear_cache_menu');
+			$cacheActions[] = array(
+				'id' => 'varnish',
+				'title' => $title,
+				'href' => 'ajax.php?ajaxID=tx_varnish::banAll',
+				'icon' => '<img src="/' . $GLOBALS['TYPO3_LOADED_EXT']['varnish']['siteRelPath'] . 'ext_icon.gif" title="' . $title . '" alt="' . $title . '" />',
+			);
+		}
 	}
 
 }
