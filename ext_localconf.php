@@ -24,6 +24,10 @@
 
 if(!defined('TYPO3_MODE')) die ('Access denied.');
 
+$extPath = t3lib_extMgm::extPath('varnish');
+require_once $extPath . 'classes/Hooks/class.tx_varnish_hooks_tcemain.php';
+
+
 switch(TYPO3_MODE) {
 	case 'FE':
 		// Typoscript
