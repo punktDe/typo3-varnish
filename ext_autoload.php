@@ -25,6 +25,8 @@
 if(!defined('TYPO3_MODE')) die ('Access denied.');
 
 $extPath = t3lib_extMgm::extPath('varnish');
+require_once $extPath . 'classes/Hooks/class.tx_varnish_hooks_tcemain.php';
+
 return array(
 	'tx_varnish_controller'			=> $extPath . 'classes/class.tx_varnish_controller.php',
 	'tx_varnish_http'			=> $extPath . 'classes/class.tx_varnish_http.php',
