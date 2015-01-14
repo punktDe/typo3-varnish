@@ -1,4 +1,5 @@
 <?php
+namespace PunktDe\Varnish\Hooks;
 /***************************************************************
 *  Copyright notice
 *
@@ -22,20 +23,24 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-if(!defined('TYPO3_MODE')) die ('Access denied.');
 
-$extPath = t3lib_extMgm::extPath('varnish');
-return array(
-	'tx_varnish_controller'			=> $extPath . 'classes/class.tx_varnish_controller.php',
-	'tx_varnish_http'			=> $extPath . 'classes/class.tx_varnish_http.php',
+/**
+ * This class contains required hooks which are called by TYPO3
+ *
+ * @author	Andri Steiner  <support@snowflake.ch>
+ * @package	TYPO3
+ * @subpackage	tx_varnish
+ */
 
-	// hooks
-	'tx_varnish_hooks_ajax'			=> $extPath . 'classes/Hooks/class.tx_varnish_hooks_ajax.php',
-	'tx_varnish_hooks_clearcachemenu'	=> $extPath . 'classes/Hooks/class.tx_varnish_hooks_clearcachemenu.php',
-	'tx_varnish_hooks_tcemain'		=> $extPath . 'classes/Hooks/class.tx_varnish_hooks_tcemain.php',
-	'tx_varnish_hooks_tslib_fe'		=> $extPath . 'classes/Hooks/class.tx_varnish_hooks_tslib_fe.php',
+class Ajax {
 
-	'tx_varnish_generalutility'		=> $extPath . 'classes/Utilities/class.tx_varnish_generalutility.php',
-);
 
-?>
+	/**
+	 * Ban all pages from varnish cache.
+	 */
+	public function banAll() {
+		$varnishController = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('PunktDe\Varnish\VarnishController');
+		$varnishController->clearCache('all');
+	}
+
+}

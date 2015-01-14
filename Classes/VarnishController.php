@@ -1,4 +1,6 @@
 <?php
+namespace PunktDe\Varnish;
+
 /***************************************************************
 *  Copyright notice
 *
@@ -31,7 +33,7 @@
  * @subpackage	tx_varnish
  */
 
-class tx_varnish_controller {
+class VarnishController {
 
 
 	/**
@@ -54,11 +56,11 @@ class tx_varnish_controller {
 
 		// assign default values
 		if(empty(self::$extConf['instanceHostnames'])) {
-			self::$extConf['instanceHostnames'] = t3lib_div::getIndpEnv('HTTP_HOST');
+			self::$extConf['instanceHostnames'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST');
 		}
 
 		// convert Comma separated List into a Array 
-		self::$extConf['instanceHostnames'] = t3lib_div::trimExplode(',', self::$extConf['instanceHostnames']);
+		self::$extConf['instanceHostnames'] = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', self::$extConf['instanceHostnames']);
 
 	}
 
@@ -67,25 +69,25 @@ class tx_varnish_controller {
 	 * clearCache
 	 * Executed by the clearCachePostProc Hook 
 	 * 
-	 * @param	string		$cacheCmd cache Command, see Description in t3lib_tcemain
+	 * @param	string		$cacheCmd cache Command, see Description in \TYPO3\CMS\Core\DataHandling\DataHandler
 	 * @return	void
 	 */
 
 	public function clearCache($cacheCmd) {
 
-		t3lib_div::sysLog(sprintf('clear varnish (%s)', $cacheCmd), 'varnish', t3lib_div::SYSLOG_SEVERITY_WARNING);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::sysLog(sprintf('clear varnish (%s)', $cacheCmd), 'varnish', \TYPO3\CMS\Core\Utility\GeneralUtility::SYSLOG_SEVERITY_WARNING);
 
 		// if cacheCmd is a single Page, issue BAN Command on this pid
 		// all other Commands ("page", "all") led to a BAN of the whole Cache
 		$cacheCmd = intval($cacheCmd);
 		$command = array(
 			$cacheCmd > 0 ? 'Varnish-Ban-TYPO3-Pid: ' . $cacheCmd : 'Varnish-Ban-All: 1',
-			'Varnish-Ban-TYPO3-Sitename: ' . tx_varnish_GeneralUtility::getSitename()
+			'Varnish-Ban-TYPO3-Sitename: ' . \PunktDe\Varnish\Utilities\GeneralUtility::getSitename()
 		);
 
 		// issue command on every Varnish Server
-		/** @var $varnishHttp tx_varnish_http */
-		$varnishHttp = t3lib_div::makeInstance('tx_varnish_http');
+		/** @var \PunktDe\Varnish\VarnishHttp $varnishHttp */
+		$varnishHttp = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('PunktDe\Varnish\VarnishHttp');
 		foreach(self::$extConf['instanceHostnames'] as $currentHost) {
 			$varnishHttp::addCommand('BAN', $currentHost, $command);
 		}
@@ -93,10 +95,3 @@ class tx_varnish_controller {
 	}
 
 }
-
-global $TYPO3_CONF_VARS;
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/varnish/classes/class.tx_varnish_controller.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/varnish/classes/class.tx_varnish_controller.php']);
-}
-
-?>
