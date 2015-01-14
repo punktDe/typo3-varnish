@@ -1,4 +1,5 @@
 <?php
+namespace PunktDe\Varnish\Hooks;
 /***************************************************************
 *  Copyright notice
 *
@@ -31,21 +32,23 @@
  * @subpackage	tx_varnish
  */
 
-class tx_varnish_hooks_ajax {
+class TypoScriptFrontendController {
 
 
 	/**
-	 * Ban all pages from varnish cache.
+	 * contentPostProc-output hook to add typo3-pid header
+	 *
+	 * @param array    $parameters
+	 * @param \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $parent
 	 */
-	public function banAll() {
-		$varnishController = t3lib_div::makeInstance('tx_varnish_controller');
-		$varnishController->clearCache('all');
+	public function sendHeader(array $parameters, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $parent) {
+		$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['varnish']);
+
+		// Send Page pid which is used to issue BAN Command against
+		if(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REV_PROXY') == 1 || $extConf['alwaysSendTypo3Headers'] == 1) {
+			header('TYPO3-Pid: ' . $parent->id);
+			header('TYPO3-Sitename: ' . \PunktDe\Varnish\Utilities\GeneralUtility::getSitename());
+		}
 	}
 
 }
-
-global $TYPO3_CONF_VARS;
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/varnish/classes/Hooks/class.tx_varnish_hooks_ajax.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/varnish/classes/Hooks/class.tx_varnish_hooks_ajax.php']);
-}
-?>

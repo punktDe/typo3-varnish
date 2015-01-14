@@ -1,4 +1,5 @@
 <?php
+namespace PunktDe\Varnish;
 /***************************************************************
 *  Copyright notice
 *
@@ -22,7 +23,7 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-
+use PunktDe\Varnish\Utilities\GeneralUtility;
 /**
  * This class communicates with the varnish server
  *
@@ -31,7 +32,7 @@
  * @subpackage	tx_varnish
  */
 
-class tx_varnish_http {
+class VarnishHttp {
 
 
 	/**
@@ -42,20 +43,15 @@ class tx_varnish_http {
 	protected static $curlQueue;
 
 
-
 	/**
-	 * Class constructor
-	 *
-	 *
-	 * @throws Exception
-	 * @return \tx_varnish_http
+	 * @throws \Exception
 	 */
 
 	public function __construct() {
 
 		// check whether the cURL PHP Extension is loaded
 		if (!extension_loaded('curl')) {
-			throw new Exception('The cURL PHP Extension is required by ext_varnish.');
+			throw new \Exception('The cURL PHP Extension is required by ext_varnish.');
 		}
 
 		// initialize cURL Multi-Handle Queue
@@ -103,7 +99,7 @@ class tx_varnish_http {
 			CURLOPT_RETURNTRANSFER  => 1,
 		);
 
-		tx_varnish_GeneralUtility::devLog(__FUNCTION__, $curlOptions);
+		GeneralUtility::devLog(__FUNCTION__, $curlOptions);
 
 		curl_setopt_array($curlHandle, $curlOptions);
 		curl_multi_add_handle(self::$curlQueue, $curlHandle);
@@ -132,7 +128,7 @@ class tx_varnish_http {
 
 	protected static function runQueue() {
 
-		tx_varnish_GeneralUtility::devLog(__FUNCTION__);
+		GeneralUtility::devLog(__FUNCTION__);
 
 		$running = null;
 		do {
@@ -146,10 +142,3 @@ class tx_varnish_http {
 
 
 }
-
-global $TYPO3_CONF_VARS;
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/varnish/classes/class.tx_varnish_http.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/varnish/classes/class.tx_varnish_http.php']);
-}
-
-?>

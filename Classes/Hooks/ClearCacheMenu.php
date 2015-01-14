@@ -1,4 +1,5 @@
 <?php
+namespace PunktDe\Varnish\Hooks;
 /***************************************************************
 *  Copyright notice
 *
@@ -22,10 +23,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-if (version_compare(TYPO3_version, '6.1', '<=')) {
-	require_once(PATH_typo3 . 'interfaces/interface.backend_cacheActionsHook.php');
-}
-
 /**
  * This class contains required hooks which are called by TYPO3
  *
@@ -33,7 +30,7 @@ if (version_compare(TYPO3_version, '6.1', '<=')) {
  * @package	TYPO3
  * @subpackage	tx_varnish
  */
-class tx_varnish_hooks_clearcachemenu implements backend_cacheActionsHook {
+class ClearCacheMenu implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInterface {
 
 
 	/**
@@ -43,7 +40,7 @@ class tx_varnish_hooks_clearcachemenu implements backend_cacheActionsHook {
 	 * @param array $optionValues
 	 */
 	public function manipulateCacheActions(&$cacheActions, &$optionValues) {
-		/** @var $LANG language */
+		/** @var \TYPO3\CMS\Lang\LanguageService $LANG */
 		if($GLOBALS['BE_USER']->isAdmin() || $GLOBALS['BE_USER']->getTSConfigVal('options.clearCache.varnish')) {
 			global $LANG;
 			$title = $LANG->sL('LLL:EXT:varnish/locallang.xml:be_clear_cache_menu');
@@ -57,10 +54,3 @@ class tx_varnish_hooks_clearcachemenu implements backend_cacheActionsHook {
 	}
 
 }
-
-global $TYPO3_CONF_VARS;
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/varnish/classes/Hooks/class.tx_varnish_hooks_clearcachemenu.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/varnish/classes/Hooks/class.tx_varnish_hooks_clearcachemenu.php']);
-}
-
-?>

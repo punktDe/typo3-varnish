@@ -1,4 +1,5 @@
 <?php
+namespace PunktDe\Varnish\Hooks;
 /***************************************************************
 *  Copyright notice
 *
@@ -31,27 +32,20 @@
  * @subpackage	tx_varnish
  */
 
-class tx_varnish_hooks_tcemain {
+class DataHandler {
 
 
 	/**
 	 * Clear cache hook
 	 *
 	 * @param array $params
-	 * @param t3lib_tceMain $parent
+	 * @param \TYPO3\CMS\Core\DataHandling\DataHandler $parent
 	 */
 	public function clearCachePostProc($params, &$parent) {
-		$varnishController = t3lib_div::makeInstance('tx_varnish_controller');
+		$varnishController = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('PunktDe\Varnish\VarnishController');
 		// use either cacheCmd or uid_page
 		$cacheCmd = isset($params['cacheCmd']) ? $params['cacheCmd'] : $params['uid_page'];
 		$varnishController->clearCache($cacheCmd);
 	}
 
 }
-
-global $TYPO3_CONF_VARS;
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/varnish/classes/Hooks/class.tx_varnish_hooks_tcemain.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/varnish/classes/Hooks/class.tx_varnish_hooks_tcemain.php']);
-}
-
-?>

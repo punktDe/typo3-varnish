@@ -27,18 +27,16 @@ if(!defined('TYPO3_MODE')) die ('Access denied.');
 switch(TYPO3_MODE) {
 	case 'FE':
 		// Typoscript
-		t3lib_extMgm::addTypoScriptSetup('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:varnish/static/setup.txt">');
+		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:varnish/Configuration/TypoScript/setup.txt">');
 
 		// Hooks
-		$TYPO3_CONF_VARS['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output'][] = 'tx_varnish_hooks_tslib_fe->sendHeader';
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output'][] = 'PunktDe\Varnish\Hooks\TypoScriptFrontendController->sendHeader';
 		break;
 	case 'BE':
 		// Hooks
-		$TYPO3_CONF_VARS['BE']['AJAX']['tx_varnish::banAll'] = 'tx_varnish_hooks_ajax->banAll';
-		$TYPO3_CONF_VARS['SC_OPTIONS']['additionalBackendItems']['cacheActions'][] = 'tx_varnish_hooks_clearcachemenu';
-		$TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc'][] = 'tx_varnish_hooks_tcemain->clearCachePostProc';
+		$GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']['tx_varnish::banAll'] = 'PunktDe\Varnish\Hooks\Ajax->banAll';
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['additionalBackendItems']['cacheActions'][] = 'PunktDe\Varnish\Hooks\ClearCacheMenu';
+		$GLOBALS['TYPO3_CONF_VARS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc'][] = 'PunktDe\Varnish\Hooks\DataHandler->clearCachePostProc';
 
 		break;
 }
-
-?>
