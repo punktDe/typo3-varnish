@@ -36,7 +36,7 @@ switch(TYPO3_MODE) {
 		// Hooks
 		$GLOBALS['TYPO3_CONF_VARS']['BE']['AJAX']['tx_varnish::banAll'] = 'PunktDe\Varnish\Hooks\Ajax->banAll';
 		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['additionalBackendItems']['cacheActions'][] = 'PunktDe\Varnish\Hooks\ClearCacheMenu';
-		$GLOBALS['TYPO3_CONF_VARS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc'][] = 'PunktDe\Varnish\Hooks\DataHandler->clearCachePostProc';
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc'][] = 'PunktDe\Varnish\Hooks\DataHandler->clearCachePostProc';
 
 		break;
 }
